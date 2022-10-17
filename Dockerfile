@@ -1,9 +1,9 @@
 FROM ubuntu:20.04
 
-ARG user=jimmy
+ARG user=kauchey
 ARG passwd=1
 
-MAINTAINER jimmy.wang jimmy.wang@e-mail.com
+MAINTAINER kauchey.wang kauchey.wang@e-mail.com
 
 # RUN sed -i "s/archive.ubuntu.com/mirrors.163.com/g" /etc/apt/sources.list && \
 #     sed -i "s/security.ubuntu.com/mirrors.163.com/g" /etc/apt/sources.list && \
