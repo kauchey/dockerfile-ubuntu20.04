@@ -25,6 +25,22 @@ if [ ! -d "${DOCKER_WORKSPACE}" ];then
     mkdir -p ${DOCKER_WORKSPACE}
 fi
 
+read -rp "Use host git\ssh config? (Y/N): " ANSWER
+while true; do
+  case "${ANSWER}" in
+    [yY])
+      echo "Use host git\ssh config."
+      MOUNTU_PATH="- \"${HOST_HOME}/.ssh:/home/${DOCKER_USER}/.ssh\"
+      - \"${HOST_HOME}/.gitconfig:/home/${DOCKER_USER}/.gitconfig\""
+      break;;
+    [nN])
+      echo "don't use host config."
+      break;;
+    *)
+      read -rp "${ANSWER} is an invalid input, put either 'y' or 'n': " ANSWER
+  esac
+done
+
 DOCKER_FILE=${DOCKER_USER}/Dockerfile
 
 echo "DOCKER_USER = "${DOCKER_USER}
@@ -62,9 +78,8 @@ services:
       context: ./
       dockerfile: ${DOCKER_USER}/Dockerfile
     volumes:
-      - "${HOST_HOME}/.ssh:/home/${DOCKER_USER}/.ssh"
-      - "${HOST_HOME}/.gitconfig:/home/${DOCKER_USER}/.gitconfig"
       - "${DOCKER_WORKSPACE}:/home/${DOCKER_USER}/workspace"
+      ${MOUNTU_PATH}
     container_name: ${DOCKER_USER}
     tty: true
     # 宿主机重启后，容器自动重启
