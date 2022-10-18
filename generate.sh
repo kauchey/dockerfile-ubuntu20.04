@@ -33,7 +33,6 @@ echo "DOCKER_FILE = "${DOCKER_FILE}
 echo "DOCKER_WORKSPACE = "${DOCKER_WORKSPACE}
 
 mkdir -p ${DOCKER_USER}
-tools="vim git tree net-tools iputils-ping"
 cat <<EOF > "${DOCKER_FILE}"
 FROM ubuntu:20.04
 
@@ -44,13 +43,13 @@ MAINTAINER kauchey.wang kauchey.wang@e-mail.com
 RUN apt update && apt install sudo -y \\
     && useradd --create-home --no-log-init --shell /bin/bash ${DOCKER_USER} -G sudo \\
     && echo "${DOCKER_USER}:${DOCKER_PASSWD}" | chpasswd
-    # && usermod -aG sudo ${DOCKER_USER}
 
 USER ${DOCKER_USER}
+ARG tools="vim git tree net-tools iputils-ping"
 
 RUN echo ${DOCKER_PASSWD} | sudo -S apt update \\
     && echo ${DOCKER_PASSWD} | sudo -S apt upgrade -y \\
-    && echo ${DOCKER_PASSWD} | sudo -S sudo apt install ${tools} -y
+    && echo ${DOCKER_PASSWD} | sudo -S sudo apt install \${tools} -y
 EOF
 
 DOCKER_COMPOSE_YML=docker-compose.yml
